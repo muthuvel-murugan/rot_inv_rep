@@ -1,0 +1,28 @@
+{
+"b_size": 100, 
+"epochs": 200, 
+"v_size": 2000,
+"l_rate": 0.0005, 
+"dropout" : 0.8,
+"lr_alt_interval" : 100,
+"lr_decay_rate" : 0.8,
+"log_interval" : 1,
+"test_log_interval" : 20,
+"seed" : -1,
+"log_dir": "logs/classify_28",
+"ip_shape": 28, 
+"op_shape": 28, 
+"beta": 0.0,
+"W_fname": "W_784x150_mnist.npy",
+"cnt_fname": "cnt_784x150_mnist.npy", 
+"test_data": ["mnist_test.npz", "mnist_org_test_784.npz"],
+"train_data": "mnist_train.npz",
+"cnt_in" : [ [14, 14, 12, 12, 10, 10, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+             [14, 14, 12, 12, 10, 10],
+             [14, 14, 12, 12]
+           ],
+"tensor_first": false,
+"scale_const": 1.0,
+"op_fname" : "28_ae_test.npy",
+"last" : 0
+}
