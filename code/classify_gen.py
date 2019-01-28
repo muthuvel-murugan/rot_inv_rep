@@ -78,11 +78,11 @@ def bn(inputs, t, training):
 
     return outputs
 
-def main():
+def main(json_fname):
     # Read json file into object
     # jo is the json object..
 
-    jo = read_json(sys.argv[1])
+    jo = read_json(json_fname)
     
     init_tf(thrds=10, seed=jo.seed)
     
@@ -482,4 +482,4 @@ def main():
 #
 
 if __name__ == '__main__':
-    main()
+    main(sys.argv[1])
