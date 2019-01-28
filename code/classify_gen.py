@@ -78,8 +78,7 @@ def bn(inputs, t, training):
 
     return outputs
 
-if __name__ == '__main__':
-
+def main():
     # Read json file into object
     # jo is the json object..
 
@@ -481,3 +480,6 @@ if __name__ == '__main__':
 #
 #      np.savez('{1}/regen_imgs_{0}x{0}'.format(op_n, log_dir), ip=y_batch, op=regen_img)
 #
+
+if __name__ == '__main__':
+    main()
