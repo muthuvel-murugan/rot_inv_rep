@@ -1,18 +1,18 @@
 {
-"b_size": 100,
+"b_size": 200,
 "s_size": 12000,
 
-"epochs": 100, 
+"epochs": 500, 
 "l_rate": 0.001, 
 "seed" : -1,
 
-"act_shape": 28, 
-"scale_shape": 28, 
+"act_shape": 32, 
+"scale_shape": 32, 
 
 "act_recons": 1,
 "scale_recons": 1,
 
-"act_reg": 0.001,
+"act_reg": 1,
 "scale_reg": 1,
 
 "beta": 0.1,
@@ -25,7 +25,7 @@
 
 "aug_count": 0,
 
-"log_dir_prefix": "logs/mnist",
+"log_dir_prefix": "logs/cifar",
 "train_data": "mnist_train.npz",
 
 "last" : 0

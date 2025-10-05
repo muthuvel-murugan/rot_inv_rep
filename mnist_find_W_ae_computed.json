@@ -17,8 +17,8 @@
 
 "beta": 0.1,
 
-"act_cnt": [10, 8, 6, 4, 2],
-"act_cnt_rep": 5,
+"act_cnt": [ 65, 130, 118, 118,  32,  32,  24,  24,   2,   2,   2,   2],
+"act_cnt_rep": 1,
 
 "scale_cnt": [8, 6, 4, 2],
 "scale_cnt_rep": 5,

@@ -1,13 +1,13 @@
 {
 "b_size": 100,
-"s_size": 12000,
+"s_size": 50000,
 
 "epochs": 100, 
 "l_rate": 0.001, 
 "seed" : -1,
 
-"act_shape": 28, 
-"scale_shape": 28, 
+"act_shape": 64, 
+"scale_shape": 64, 
 
 "act_recons": 1,
 "scale_recons": 1,
@@ -17,15 +17,15 @@
 
 "beta": 0.1,
 
-"act_cnt": [10, 8, 6, 4, 2],
-"act_cnt_rep": 5,
+"act_cnt": [296, 592, 568, 568, 204, 204, 184, 184,  28,  28,  26,  26,   6,   6,   6,   6],
+"act_cnt_rep": 1,
 
 "scale_cnt": [8, 6, 4, 2],
 "scale_cnt_rep": 5,
 
 "aug_count": 0,
 
-"log_dir_prefix": "logs/mnist",
+"log_dir_prefix": "logs/mtarsi",
 "train_data": "mnist_train.npz",
 
 "last" : 0

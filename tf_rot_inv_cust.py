@@ -65,7 +65,7 @@ def projW(inputs, n, max_o=-1, padding='VALID', strides=[1, 1, 1, 1]):
     fname = sys._getframe().f_code.co_name
     nsq = n*n
     ch = int(inputs.get_shape()[-1])
-    print '{} - inputs shape : {}'.format(fname, inputs.shape)
+    print('{} - inputs shape : {}'.format(fname, inputs.shape))
 
     W = np.load('W_{}.npy'.format(nsq))
     cnt = np.load('cnt_{}.npy'.format(nsq))
@@ -76,18 +76,18 @@ def projW(inputs, n, max_o=-1, padding='VALID', strides=[1, 1, 1, 1]):
     tot_cnt = np.sum(cnt)
     W = W[:, :tot_cnt]
     
-    print '{} - ch : {}'.format(fname, ch)
-    print '{} - W shape : {}'.format(fname, W.shape)
+    print('{} - ch : {}'.format(fname, ch))
+    print('{} - W shape : {}'.format(fname, W.shape))
 
     W = W.reshape(n, n, 1, -1)
     W = np.float32(W)
 
     W_t = tf.tile(W, [1, 1, ch, 1])
 
-    print '{} - W_t shape : {}'.format(fname, W_t.shape)
+    print('{} - W_t shape : {}'.format(fname, W_t.shape))
 
     outputs = tf.nn.depthwise_conv2d(inputs, W_t, strides, padding)
-    print '{} - outputs shape : {}'.format(fname, outputs.shape)
+    print('{} - outputs shape : {}'.format(fname, outputs.shape))
 
     return outputs
 
@@ -95,7 +95,7 @@ def projW(inputs, n, max_o=-1, padding='VALID', strides=[1, 1, 1, 1]):
 def onlyOmega0(inputs, n, max_o=-1):
     fname = sys._getframe().f_code.co_name
     nsq = n*n
-    print '{} - inputs shape : {}'.format(fname, inputs.shape)
+    print('{} - inputs shape : {}'.format(fname, inputs.shape))
 
     cnt = np.load('cnt_{}.npy'.format(nsq))
     if max_o != -1:
@@ -105,19 +105,19 @@ def onlyOmega0(inputs, n, max_o=-1):
     tot_ch = int(inputs.get_shape()[-1])
     ch = tot_ch / tot_cnt
 
-    print '{} - ch : {}'.format(fname, ch)
+    print('{} - ch : {}'.format(fname, ch))
 
     w_0_ind = np.arange(cnt[0], dtype=np.int32)
     ind = w_0_ind.copy()
-    print '{} - ind : {}'.format(fname, ind)
+    print('{} - ind : {}'.format(fname, ind))
     for i in range(1, ch):
         ind = np.concatenate((ind, ((i * int(np.sum(cnt))) + w_0_ind)))
     
-    print '{} - ind : {}'.format(fname, ind)
-    print '{} - ind.shape : {}'.format(fname, ind.shape)
+    print('{} - ind : {}'.format(fname, ind))
+    print('{} - ind.shape : {}'.format(fname, ind.shape))
 
     inputs = tf.transpose(inputs, [3, 0, 1, 2])
-    print '{} - inputs shape : {}'.format(fname, inputs.shape)
+    print('{} - inputs shape : {}'.format(fname, inputs.shape))
     outputs = tf.gather(inputs, ind)
     outputs = tf.transpose(outputs, [1, 2, 3, 0])
 
@@ -127,7 +127,7 @@ def onlyOmega0(inputs, n, max_o=-1):
 def useNorm(inputs, n, max_o=-1):
     fname = sys._getframe().f_code.co_name
     nsq = n*n
-    print '{} - inputs shape : {}'.format(fname, inputs.shape)
+    print('{} - inputs shape : {}'.format(fname, inputs.shape))
 
     cnt = np.load('cnt_{}.npy'.format(nsq))
 
@@ -138,7 +138,7 @@ def useNorm(inputs, n, max_o=-1):
     tot_ch = int(inputs.get_shape()[-1])
     ch = tot_ch / tot_cnt
 
-    print '{} - ch : {}'.format(fname, ch)
+    print('{} - ch : {}'.format(fname, ch))
 
     w_0_ind = np.arange(cnt[0], dtype=np.int32)
     ind_0 = w_0_ind.copy()
@@ -149,13 +149,13 @@ def useNorm(inputs, n, max_o=-1):
     mask_1[ind_0] = False
     ind_1 = np.arange(tot_ch, dtype=np.int32)[mask_1]
 
-    print '{} - ind0 : {}'.format(fname, ind_0)
-    print '{} - ind0.shape : {}'.format(fname, ind_0.shape)
-    print '{} - ind1 : {}'.format(fname, ind_1)
-    print '{} - ind1.shape : {}'.format(fname, ind_1.shape)
+    print('{} - ind0 : {}'.format(fname, ind_0))
+    print('{} - ind0.shape : {}'.format(fname, ind_0.shape))
+    print('{} - ind1 : {}'.format(fname, ind_1))
+    print('{} - ind1.shape : {}'.format(fname, ind_1.shape))
     
     inputs = tf.transpose(inputs, [3, 0, 1, 2])
-    print '{} - inputs shape : {}'.format(fname, inputs.shape)
+    print('{} - inputs shape : {}'.format(fname, inputs.shape))
     op_0 = tf.gather(inputs, ind_0)
 
     op_1 = tf.gather(inputs, ind_1)
@@ -165,14 +165,14 @@ def useNorm(inputs, n, max_o=-1):
 
     outputs = tf.concat([op_0, op_1], axis=0)
     outputs = tf.transpose(outputs, [1, 2, 3, 0])
-    print '{} - outputs shape : {}'.format(fname, outputs.shape)
+    print('{} - outputs shape : {}'.format(fname, outputs.shape))
 
     return outputs
 
 def useRinv(inputs, n, max_o=-1, cnt=None, ang=None):
     fname = sys._getframe().f_code.co_name
     nsq = n*n
-    print '{} - inputs shape : {}'.format(fname, inputs.shape)
+    print('{} - inputs shape : {}'.format(fname, inputs.shape))
 
     #if cnt == None:
     #    cnt = np.load('cnt_{}.npy'.format(nsq))
@@ -184,7 +184,7 @@ def useRinv(inputs, n, max_o=-1, cnt=None, ang=None):
     tot_ch = int(inputs.get_shape()[-1])
     ch = tot_ch / tot_cnt
 
-    print '{} - ch : {}'.format(fname, ch)
+    print('{} - ch : {}'.format(fname, ch))
 
     c = cnt[1:]
     
@@ -234,20 +234,20 @@ def useRinv(inputs, n, max_o=-1, cnt=None, ang=None):
     scale = scale * ch
     scale = np.array(scale, dtype=np.float32)
 
-    print '{} - cc1 : {}'.format(fname, cc1)
-    print '{} - scale : {}'.format(fname, scale)
+    print('{} - cc1 : {}'.format(fname, cc1))
+    print('{} - scale : {}'.format(fname, scale))
 
     mask_1 = np.ones(tot_ch, dtype=np.bool)
     mask_1[ind_0] = False
     ind_1 = np.arange(tot_ch, dtype=np.int32)[mask_1]
 
-    print '{} - ind0 : {}'.format(fname, ind_0)
-    print '{} - ind0.shape : {}'.format(fname, ind_0.shape)
-    print '{} - ind1 : {}'.format(fname, ind_1)
-    print '{} - ind1.shape : {}'.format(fname, ind_1.shape)
+    print('{} - ind0 : {}'.format(fname, ind_0))
+    print('{} - ind0.shape : {}'.format(fname, ind_0.shape))
+    print('{} - ind1 : {}'.format(fname, ind_1))
+    print('{} - ind1.shape : {}'.format(fname, ind_1.shape))
     
     inputs = tf.transpose(inputs, [3, 0, 1, 2])
-    print '{} - inputs shape : {}'.format(fname, inputs.shape)
+    print('{} - inputs shape : {}'.format(fname, inputs.shape))
     op_0 = tf.gather(inputs, ind_0)
 
     ip_1 = tf.gather(inputs, ind_1)   
@@ -255,18 +255,18 @@ def useRinv(inputs, n, max_o=-1, cnt=None, ang=None):
     ip_1_y = tf.gather(ip_1, cc1+1)
     #if ang == None:
     #ang = tf.atan2(ip_1_y, ip_1_x)
-    print '{} - ang shape : {}'.format(fname, ang.shape)
+    print('{} - ang shape : {}'.format(fname, ang.shape))
     ang = tf.transpose(ang, [1, 2, 3, 0])
-    print '{} - ang shape : {}'.format(fname, ang.shape)
-    print '{} - scale shape : {}'.format(fname, scale.shape)
+    print('{} - ang shape : {}'.format(fname, ang.shape))
+    print('{} - scale shape : {}'.format(fname, scale.shape))
     ang = scale * ang
     ang = tf.transpose(ang, [3, 0, 1, 2])
     cs = tf.cos(ang)
     ss = tf.sin(ang)
     ss = tf.transpose(ss, [1, 2, 3, 0])
     sg = np.ones(sum(c) * ch, dtype=np.float32)
-    print '{} - sg shape : {}'.format(fname, sg.shape)
-    print '{} - ss shape : {}'.format(fname, ss.shape)
+    print('{} - sg shape : {}'.format(fname, sg.shape))
+    print('{} - ss shape : {}'.format(fname, ss.shape))
     sg[1::2] = -1.
     ss = sg * ss
     ss = tf.transpose(ss, [3, 0, 1, 2])
@@ -280,7 +280,7 @@ def useRinv(inputs, n, max_o=-1, cnt=None, ang=None):
     outputs = tf.concat([op_0, op_1], axis=0)
     #outputs = tf.gather(outputs, mask)
     outputs = tf.transpose(outputs, [1, 2, 3, 0])
-    print '{} - outputs shape : {}'.format(fname, outputs.shape)
+    print('{} - outputs shape : {}'.format(fname, outputs.shape))
 
     #outputs = tf.nn.l2_normalize(outputs, -1)
 
@@ -289,7 +289,7 @@ def useRinv(inputs, n, max_o=-1, cnt=None, ang=None):
 def _useRinv(inputs, n, max_o=-1):
     fname = sys._getframe().f_code.co_name
     nsq = n*n
-    print '{} - inputs shape : {}'.format(fname, inputs.shape)
+    print('{} - inputs shape : {}'.format(fname, inputs.shape))
 
     cnt = np.load('cnt_{}.npy'.format(nsq))
 
@@ -300,7 +300,7 @@ def _useRinv(inputs, n, max_o=-1):
     tot_ch = int(inputs.get_shape()[-1])
     ch = tot_ch / tot_cnt
 
-    print '{} - ch : {}'.format(fname, ch)
+    print('{} - ch : {}'.format(fname, ch))
     
     x_mask = np.zeros(tot_cnt, dtype=np.bool)
     y_mask = np.zeros(tot_cnt, dtype=np.bool)
@@ -313,14 +313,14 @@ def _useRinv(inputs, n, max_o=-1):
 
     def _eachCh(ip):
         fname = sys._getframe().f_code.co_name
-        print '{} - Input Shape : {}'.format(fname, ip.get_shape())
+        print('{} - Input Shape : {}'.format(fname, ip.get_shape()))
     
         tot_cols = tot_cnt
         #R = np.zeros((tot_cols, tot_cols))
         #ang = np.zeros_like(cnt, dtype=np.float32)
         ang = -1. * tf.atan2(tf.boolean_mask(ip, y_mask), tf.boolean_mask(ip, x_mask))
-        print '{} - cnt shape : {}'.format(fname, cnt)
-        print '{} - ang shape : {}'.format(fname, ang.shape)
+        print('{} - cnt shape : {}'.format(fname, cnt))
+        print('{} - ang shape : {}'.format(fname, ang.shape))
 
         blks = []
         blks.append(tf.eye(cnt[0]))
@@ -338,41 +338,41 @@ def _useRinv(inputs, n, max_o=-1):
 
         R = block_diagonal(blks) 
         ip = tf.reshape(ip, [-1, 1])
-        print '{} - ip Shape : {}'.format(fname, ip.get_shape())
+        print('{} - ip Shape : {}'.format(fname, ip.get_shape()))
         op = tf.matmul(R, ip)
-        print '{} - op Shape : {}'.format(fname, op.get_shape())
+        print('{} - op Shape : {}'.format(fname, op.get_shape()))
         op = tf.reshape(op, [-1])
-        print '{} - op Shape : {}'.format(fname, op.get_shape())
+        print('{} - op Shape : {}'.format(fname, op.get_shape()))
         #op = tf.boolean_mask(op, mask)
         #print '{} - op Shape : {}'.format(fname, op.get_shape())
         return op
 
     def _eachPatch(ip):
         fname = sys._getframe().f_code.co_name
-        print '{} - Input Shape : {}'.format(fname, ip.get_shape())
+        print('{} - Input Shape : {}'.format(fname, ip.get_shape()))
         ip = tf.reshape(ip, [-1, tot_cnt])
         op = tf.map_fn(_eachCh, ip)
-        print '{} - op Shape : {}'.format(fname, op.get_shape())
+        print('{} - op Shape : {}'.format(fname, op.get_shape()))
         op = tf.reshape(op, [-1])
-        print '{} - op Shape : {}'.format(fname, op.get_shape())
+        print('{} - op Shape : {}'.format(fname, op.get_shape()))
         return op
 
     def _eachSamp(ip):
         fname = sys._getframe().f_code.co_name
-        print '{} - Input Shape : {}'.format(fname, ip.get_shape())
+        print('{} - Input Shape : {}'.format(fname, ip.get_shape()))
         sh = ip.get_shape().as_list()
         sh[1] = sh[0] * sh[1]
         ip = tf.reshape(ip, sh[1:])
         op = tf.map_fn(_eachPatch, ip)
-        print '{} - op Shape : {}'.format(fname, op.get_shape())
+        print('{} - op Shape : {}'.format(fname, op.get_shape()))
         sh[1] = sh[1] / sh[0]
         op = tf.reshape(op, sh)
-        print '{} - op Shape : {}'.format(fname, op.get_shape())
+        print('{} - op Shape : {}'.format(fname, op.get_shape()))
         return op
 
     
     outputs = tf.map_fn(_eachSamp, inputs)
-    print '{} - outputs Shape : {}'.format(fname, outputs.get_shape())
+    print('{} - outputs Shape : {}'.format(fname, outputs.get_shape()))
     return outputs
 
 
@@ -594,9 +594,9 @@ if __name__ == '__main__':
         tr_acc = get_accuracy(X_train, y_train, b_size, correct_prediction)
         va_acc = get_accuracy(X_valid, y_valid, b_size, correct_prediction)
         t3 = time.time()
-        print 'Epoch: {:4d}    Accuracy: Train {:0.4f}, ' \
+        print('Epoch: {:4d}    Accuracy: Train {:0.4f}, ' \
               'Valid {:0.4f}    Time: Train {:0.2f} Validate {:0.2f}'.format(\
-              i+1, tr_acc, va_acc, t2-t1, t3-t2)
+              i+1, tr_acc, va_acc, t2-t1, t3-t2))
         #print fc_vals[0].shape
         #print fc_vals[0][0, 0, 0, :5]
         #tr_acc_summary = tf.summary.scalar('train_acc', tf.Constant(tr_acc))
@@ -608,4 +608,4 @@ if __name__ == '__main__':
     
       save_path = saver.save(sess, 'ckpt/my_model_final.ckpt')
       acc = get_accuracy(X_test, y_test, b_size, correct_prediction)
-      print 'test accuracy {0}'.format(acc)
+      print('test accuracy {0}'.format(acc))

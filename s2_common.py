@@ -13,17 +13,19 @@ from gen_R1 import *
 import tf_rot_inv_cust
 
 def init_tf(gpu_percent=0.5, grow=True, thrds=10):
-    config = tf.ConfigProto()
-    
-    config.intra_op_parallelism_threads = thrds
-    config.inter_op_parallelism_threads = thrds
+    # config = tf.ConfigProto()
+    # 
+    # config.intra_op_parallelism_threads = thrds
+    # config.inter_op_parallelism_threads = thrds
 
-    config.gpu_options.per_process_gpu_memory_fraction = gpu_percent
-    config.gpu_options.allow_growth = grow
+    # config.gpu_options.per_process_gpu_memory_fraction = gpu_percent
+    # config.gpu_options.allow_growth = grow
 
-    session = tf.Session(config=config)
+    # session = tf.Session(config=config)
     #tf.set_random_seed(1)
     #np.random.seed(1)
+    
+    pass
 
 def l1_loss(params):
     return tf.abs(tf.reshape(params, [-1]))
@@ -34,25 +36,25 @@ def l2_loss(params):
 def full_quad_tensor_n(inputs, t, keep_d1=False):
     # input.shape = (#samp, t.shape[0], 1)
     fname = sys._getframe().f_code.co_name
-    print '{} - inputs shape : {}'.format(fname, inputs.shape)
+    print('{} - inputs shape : {}'.format(fname, inputs.shape))
     w_tot = t.shape[0]
     w_0 = np.sum(t==0)
     w_rest = np.sum(t>0)
-    print '{} - w_tot : {}'.format(fname, w_tot)
-    print '{} - w_0 : {}'.format(fname, w_0)
-    print '{} - w_rest : {}'.format(fname, w_rest)
+    print('{} - w_tot : {}'.format(fname, w_tot))
+    print('{} - w_0 : {}'.format(fname, w_0))
+    print('{} - w_rest : {}'.format(fname, w_rest))
 
     ind_0 = np.arange(w_0, dtype=np.int32)
     ind_1 = np.arange(w_0, w_tot, dtype=np.int32)
 
-    print '{} - ind0 : {}'.format(fname, ind_0)
-    print '{} - ind0.shape : {}'.format(fname, ind_0.shape)
-    print '{} - ind1 : {}'.format(fname, ind_1)
-    print '{} - ind1.shape : {}'.format(fname, ind_1.shape)
+    print('{} - ind0 : {}'.format(fname, ind_0))
+    print('{} - ind0.shape : {}'.format(fname, ind_0.shape))
+    print('{} - ind1 : {}'.format(fname, ind_1))
+    print('{} - ind1.shape : {}'.format(fname, ind_1.shape))
    
     # bring the proj coeffs to the front
     inputs = tf.transpose(inputs, [1, 0, 2])
-    print '{} - inputs shape : {}'.format(fname, inputs.shape)
+    print('{} - inputs shape : {}'.format(fname, inputs.shape))
     ip_0 = tf.gather(inputs, ind_0)
     ip_1 = tf.gather(inputs, ind_1)
     # bring #samps to the front
@@ -63,7 +65,7 @@ def full_quad_tensor_n(inputs, t, keep_d1=False):
     # deg 1 tensor (i.e. the input itself)
     op_all_deg_1 = inputs
     t_all_deg_1 = t
-    print '{} - op_all_deg_1 shape : {}'.format(fname, op_all_deg_1.shape)
+    print('{} - op_all_deg_1 shape : {}'.format(fname, op_all_deg_1.shape))
 
     # TODO dont tensor with type 0
     # TODO
@@ -161,32 +163,32 @@ def full_quad_tensor_n(inputs, t, keep_d1=False):
     t_op = t_op[t_op_order]
     outputs = tf.gather(outputs, t_op_order, axis=1)
 
-    print '{} - outputs shape : {}'.format(fname, outputs.shape)
+    print('{} - outputs shape : {}'.format(fname, outputs.shape))
     return outputs, t_op
 
 
 def full_quad_tensor(inputs, t, keep_d1=False):
     # input.shape = (#samp, t.shape[0], 1)
     fname = sys._getframe().f_code.co_name
-    print '{} - inputs shape : {}'.format(fname, inputs.shape)
+    print('{} - inputs shape : {}'.format(fname, inputs.shape))
     w_tot = t.shape[0]
     w_0 = np.sum(t==0)
     w_rest = np.sum(t>0)
-    print '{} - w_tot : {}'.format(fname, w_tot)
-    print '{} - w_0 : {}'.format(fname, w_0)
-    print '{} - w_rest : {}'.format(fname, w_rest)
+    print('{} - w_tot : {}'.format(fname, w_tot))
+    print('{} - w_0 : {}'.format(fname, w_0))
+    print('{} - w_rest : {}'.format(fname, w_rest))
 
     ind_0 = np.arange(w_0, dtype=np.int32)
     ind_1 = np.arange(w_0, w_tot, dtype=np.int32)
 
-    print '{} - ind0 : {}'.format(fname, ind_0)
-    print '{} - ind0.shape : {}'.format(fname, ind_0.shape)
-    print '{} - ind1 : {}'.format(fname, ind_1)
-    print '{} - ind1.shape : {}'.format(fname, ind_1.shape)
+    print('{} - ind0 : {}'.format(fname, ind_0))
+    print('{} - ind0.shape : {}'.format(fname, ind_0.shape))
+    print('{} - ind1 : {}'.format(fname, ind_1))
+    print('{} - ind1.shape : {}'.format(fname, ind_1.shape))
    
     # bring the proj coeffs to the front
     inputs = tf.transpose(inputs, [1, 0, 2])
-    print '{} - inputs shape : {}'.format(fname, inputs.shape)
+    print('{} - inputs shape : {}'.format(fname, inputs.shape))
     ip_0 = tf.gather(inputs, ind_0)
     ip_1 = tf.gather(inputs, ind_1)
     # bring #samps to the front
@@ -197,12 +199,12 @@ def full_quad_tensor(inputs, t, keep_d1=False):
     # deg 1 tensor (i.e. the input itself)
     op_all_deg_1 = inputs
     t_all_deg_1 = t
-    print '{} - op_all_deg_1 shape : {}'.format(fname, op_all_deg_1.shape)
+    print('{} - op_all_deg_1 shape : {}'.format(fname, op_all_deg_1.shape))
 
     # deg 2, w = 0 case
     if w_0 > 0:
         op_0_deg_2 = tf.matmul(ip_0, inputs, transpose_b=True)
-        print '{} - op_0_deg_2 shape : {}'.format(fname, op_0_deg_2.shape)
+        print('{} - op_0_deg_2 shape : {}'.format(fname, op_0_deg_2.shape))
         mask = np.ones((w_0, w_tot), dtype=np.bool)
         for ii in range(1, w_0):
             for jj in range(ii+1):
@@ -213,7 +215,7 @@ def full_quad_tensor(inputs, t, keep_d1=False):
         t_0_deg_2 = np.tile(t, w_0)
         t_0_deg_2 = t_0_deg_2[mask]
 
-        print '{} - op_0_deg_2 shape : {}'.format(fname, op_0_deg_2.shape)
+        print('{} - op_0_deg_2 shape : {}'.format(fname, op_0_deg_2.shape))
 
     # deg 2, w > 0 case
     if w_rest > 0:
@@ -287,7 +289,7 @@ def full_quad_tensor(inputs, t, keep_d1=False):
     t_op = t_op[t_op_order]
     outputs = tf.gather(outputs, t_op_order, axis=1)
 
-    print '{} - outputs shape : {}'.format(fname, outputs.shape)
+    print('{} - outputs shape : {}'.format(fname, outputs.shape))
     return outputs, t_op
 
 def create_node(name, x_ip, t_ip, t_op, tens=True):
@@ -346,12 +348,12 @@ def create_node(name, x_ip, t_ip, t_op, tens=True):
 
     x_op = tf.reshape(x_op, [-1, np.sum(t_op <= max_w), 1])
 
-    print '{} - x op shape : {}'.format(fname, x_op.shape)
-    print '{} - t op shape : {}'.format(fname, t_op.shape)
-    print '{} - t total shape : {}'.format(fname, np.sum(t_op <= max_w))
+    print('{} - x op shape : {}'.format(fname, x_op.shape))
+    print('{} - t op shape : {}'.format(fname, t_op.shape))
+    print('{} - t total shape : {}'.format(fname, np.sum(t_op <= max_w)))
 
-    print '{} - t_op[t_op <= {}] : {}'.format(fname, max_w, t_op[t_op <= max_w])
-    print '{} - ************************************ Number of Params : {}'.format(fname, nop)
+    print('{} - t_op[t_op <= {}] : {}'.format(fname, max_w, t_op[t_op <= max_w]))
+    print('{} - ************************************ Number of Params : {}'.format(fname, nop))
 
     return x_op, t_op[t_op <= max_w], nop, wt_list
 

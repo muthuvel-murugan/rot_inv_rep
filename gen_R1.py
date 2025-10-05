@@ -22,7 +22,7 @@ def build_R1_for_rot(ang, cnt, n):
     return R
 
 def build_R2_for_rot(ang, cnt, n):
-    print cnt
+    print(cnt)
     tot_dim = sum(cnt)
     R = np.zeros((tot_dim, tot_dim))
     o = 1.
@@ -42,7 +42,7 @@ def build_R2_for_rot(ang, cnt, n):
     return R
 
 def build_R1_for_rot_tf(ang, cnt, n):
-    print cnt
+    print(cnt)
     tot_dim = sum(cnt)
     R = np.zeros((tot_dim, tot_dim))
     o = 1.

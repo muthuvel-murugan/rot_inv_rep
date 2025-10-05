@@ -9,7 +9,7 @@ def read_json(json_fname):
         jo = json.load(fp, object_hook=lambda d: Namespace(**d))
     
     with open(json_fname) as fp:
-        print fp.read()
+        print(fp.read())
     
     if hasattr(jo, 'test_data') and type(jo.test_data) != list:
         jo.test_data = [jo.test_data]
