@@ -1,8 +1,8 @@
 {
 "b_size": 100,
-"s_size": 12000,
+"s_size": 25000,
 
-"epochs": 100, 
+"epochs": 20, 
 "l_rate": 0.001, 
 "seed" : -1,
 
@@ -12,7 +12,7 @@
 "act_recons": 1,
 "scale_recons": 1,
 
-"act_reg": 0.001,
+"act_reg": 0,
 "scale_reg": 1,
 
 "beta": 0.1,

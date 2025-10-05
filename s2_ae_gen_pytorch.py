@@ -7,6 +7,7 @@ import numpy as np
 import torch
 import torch.optim as optim
 from torch import nn as nn
+from torch.nn.utils import parametrizations as params
 import kornia.geometry.transform as T
 from tqdm import tqdm
 
@@ -185,6 +186,7 @@ if __name__ == '__main__':
 
     model = WLearner(ip_n, op_sh, torch.tensor(t_op))
     model.to(device)
+    model = params.orthogonal(model, "W")
     criterion = nn.MSELoss()
     optimizer = optim.Adam(model.parameters(), lr=LEARNING_RATE)
 
@@ -211,18 +213,41 @@ if __name__ == '__main__':
             train_err = loss # compute_error(model, X_train, y_train, batch_size)
             pbar.set_postfix({"recon rr": f"{recon_err:.4f}", " reg:": f"{reg:.4f}"})
 
+        if (epoch + 1) % 5 == 0:
+            W_cplx = model.W.detach().numpy()
+            save_model(W_cplx, epoch+1)
     
     state_dict = model.state_dict()
-    W_cplx = state_dict['W']
-    print(state_dict['W'])
-    print(state_dict['W'].shape)
-    W = torch.zeros((ip_n ** 2, sum(cnt_op_1)))
+    print('state dict: ', state_dict)
+    #torch.save(state_dict, '{}/state_dict_{}x{}'.format(log_dir, ip_n ** 2, sum(cnt_op_1)))
+    print (model.W)
+    W_cplx = model.W.detach().numpy()
+    save_model(W_cplx, "xx")
+    # #W_cplx = state_dict['W']
+    # #print(state_dict['W'])
+    # #print(state_dict['W'].shape)
+    # W = np.zeros((ip_n ** 2, sum(cnt_op_1)))
+    # W[:, :cnt_ip[0]] = W_cplx[:, :cnt_ip[0]].real
+    # W[:, cnt_ip[0]::2] = W_cplx[:, cnt_ip[0]:].real
+    # W[:, cnt_ip[0]+1::2] = W_cplx[:, cnt_ip[0]:].imag
+    # if not os.path.exists(log_dir):
+    #     os.makedirs(log_dir)
+    # np.save('{}/W_{}x{}_xx'.format(log_dir, ip_n ** 2, sum(cnt_op_1)), W)
+    # np.save('{}/cnt_{}x{}_xx'.format(log_dir, ip_n ** 2, sum(cnt_op_1)), cnt_op_1)
+
+def save_model(W_cplx, epoch):
+    W_cplx = model.W.detach().numpy()
+    #W_cplx = state_dict['W']
+    #print(state_dict['W'])
+    #print(state_dict['W'].shape)
+    W = np.zeros((ip_n ** 2, sum(cnt_op_1)))
     W[:, :cnt_ip[0]] = W_cplx[:, :cnt_ip[0]].real
     W[:, cnt_ip[0]::2] = W_cplx[:, cnt_ip[0]:].real
     W[:, cnt_ip[0]+1::2] = W_cplx[:, cnt_ip[0]:].imag
     if not os.path.exists(log_dir):
         os.makedirs(log_dir)
-    np.save('{}/W_{}x{}'.format(log_dir, ip_n ** 2, sum(cnt_op_1)), W)
-    np.save('{}/cnt_{}x{}'.format(log_dir, ip_n ** 2, sum(cnt_op_1)), cnt_op_1)
+    np.save('{}/W_{}x{}_{}'.format(log_dir, ip_n ** 2, sum(cnt_op_1)), W, epoch)
+    np.save('{}/cnt_{}x{}_{}'.format(log_dir, ip_n ** 2, sum(cnt_op_1)), cnt_op_1, epoch)
+
 
     
